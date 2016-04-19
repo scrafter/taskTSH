@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task</title>
+	<meta name="Author" content="Tomasz Manka"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- BOOTSTRAP & JQUERY -->	
+	<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
+    <!-- GOOGLE FONTS -->
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700' rel='stylesheet' type='text/css'>
+    
+    <!-- ANGULAR.JS -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    
+    <!-- js scripts -->
+    <script src="js/myApp.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body data-ng-app="myApp" data-ng-controller="mainCtrl">
+
+    <div class="container" id="main">
+       
+<!--        HEADER-->
+        <header>
+            <p class="row">
+                <span class="col-xs-12" id="title">
+                    Where your money goes
+                </span>
+            </p>
+            <p class="row">
+                <span class="col-xs-12" id="subtitle">
+                    Payments made by Chichester District Council to individual suppliers with a value over &pound;500 made within October.
+                </span>
+            </p>
+        </header>
+        
+        <!-- TOOLS -->
+        <div class="row" id="tools">
+            <div class="col-xs-1"></div>
+            
+            <div class="col-xs-4 col-md-6">
+                <input type="text" class="form-control" placeholder="Search suppliers" data-ng-model="search" />
+            </div>
+
+
+            <div class="col-xs-3 col-md-2" id="select">
+                <input type="number" placeholder="Select pound rating" data-ng-model="rating" data-ng-change="checkValue()" />
+            </div>
+
+            <div class="col-xs-4 col-md-3 col-lg-2">
+                <button type="reset" id="btn-reset" data-ng-click="reset()">Reset</button>
+                <button type="submit" id="btn-search" data-ng-click="searchRecords()">Search</button>
+            </div>
+            
+            <div class="col-xs-0 col-sm-1"></div>
+        </div>
+        
+        <div class="row">
+            
+<!--        TABLE-->
+        <div class="col-xs-12" id="table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Supplier</th>
+                        <th>Pound Rating</th>    
+                        <th>Reference</th>    
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="x in payments" data-ng-click="showDetails($index)">
+                        <td>{{ x.payment_supplier }}</td>
+                        <td>
+                            <div class="rating-active"></div>
+                            <div data-ng-class="{ 'rating': x.payment_cost_rating < 2, 'rating-active': x.payment_cost_rating >= 2 }"></div>
+                            <div data-ng-class="{ 'rating': x.payment_cost_rating < 3, 'rating-active': x.payment_cost_rating >= 3 }"></div>
+                            <div data-ng-class="{ 'rating': x.payment_cost_rating < 4, 'rating-active': x.payment_cost_rating >= 4 }"></div>
+                            <div data-ng-class="{ 'rating': x.payment_cost_rating < 5, 'rating-active': x.payment_cost_rating >= 5 }"></div>
+                        </td>
+                        <td>{{ x.payment_ref }}</td>
+                        <td>{{ '£' + (x.payment_amount | number:2) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            
+        </div>
+        
+<!--        PAGINATION-->
+        <div class="row" id="pagination">
+            <div data-ng-show="pages.left" data-ng-click="prevPage()"></div>
+            <div data-ng-repeat="(key, value) in pages.links" data-ng-click="switchPage(value)" data-ng-class="{ 'active' : pages.current==key }" >
+                {{ key | page }}
+            </div>
+            <div data-ng-show="pages.right" data-ng-click="nextPage()"></div>
+        </div>
+        
+    </div>
+    
+<!--    DETAIL BOX-->
+    <div id="detailBox">
+        
+       <h1>Payment details</h1>     
+          
+       <div id="supplier">
+            <div class="title">Supplier</div>
+            <div class="content">ACCESS MOBILITY</div>
+        </div>
+
+        <div id="pound-rating">
+            <div class="title">Pound Rating</div>
+            <div class="content"></div>
+        </div>
+
+        <div id="reference">
+            <div class="title">Reference</div>
+            <div class="content">49 998</div>
+        </div>
+
+        <div id="value">
+            <div class="title">Value</div>
+            <div class="content">3,694</div>
+        </div>
+        <button type="button" class="btn btn-default" data-ng-click="quit()">Close</button>
+    </div>
+</body>
+</html>
